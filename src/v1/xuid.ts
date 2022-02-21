@@ -5,7 +5,7 @@ import * as mysql from "./mysql";
 export const router = express.Router();
 
 router.get("/", (request, response) => {
-  const name = request.get("name");
+  const name = request.query.name;
   mysql.client.changeUser({
     database: "s20_CORAL_REEF",
   });
@@ -18,7 +18,7 @@ router.get("/", (request, response) => {
         response.status(500).json({
           error: error.message,
         });
-      } else if (!results.isInteger) {
+      } else if (!results[0]) {
         response.status(404).json({
           error: "User not found",
         });
