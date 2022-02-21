@@ -16,7 +16,7 @@ router.get("/", (request, response) => {
     (error, results) => {
       if (error) {
         response.status(500).json({
-          error: error.message,
+          error: "Failed to connect to the database or invalid query.",
         });
       } else if (!results[0]) {
         response.status(404).json({
