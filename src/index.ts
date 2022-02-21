@@ -11,4 +11,4 @@ const app = express();
 app.use("/v1/", v1.router);
 
 // noinspection JSUnusedGlobalSymbols
-export const http = functions.https.onRequest(app);
+export const http = functions.region("asia-northeast1").https.onRequest(app);
