@@ -18,7 +18,10 @@ const limiter = FirebaseFunctionsRateLimiter.withFirestoreBackend({
 
 app.use("/v1/", v1.router);
 
-const http = functions.region("asia-northeast1").https;
+const http = functions.region("asia-northeast1").runWith({
+  timeoutSeconds: 30,
+  memory: "128MB",
+}).https;
 
 export const api = http.onRequest(async (req, res) => {
   if (await limiter.isQuotaExceededOrRecordUsage("host-" + req.hostname)) {
