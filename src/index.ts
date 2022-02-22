@@ -24,7 +24,7 @@ const http = functions.region("asia-northeast1").runWith({
 }).https;
 
 export const api = http.onRequest(async (req, res) => {
-  if (await limiter.isQuotaExceededOrRecordUsage("host-" + req.hostname)) {
+  if (await limiter.isQuotaExceededOrRecordUsage("ip-" + req.ips)) {
     res.status(429).json({error: "Too many requests"});
     return;
   }
