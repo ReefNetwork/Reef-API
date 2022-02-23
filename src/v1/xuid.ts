@@ -26,6 +26,7 @@ router.get("/", (request, response) => {
           xuid: results[0].xuid,
         });
       }
+      client.end();
     },
   );
 });
