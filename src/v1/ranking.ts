@@ -1,9 +1,9 @@
-import * as express from "express";
-import {Response} from "express";
+import {Response, Router} from "express";
 import * as mysql from "./mysql";
+import {MysqlError} from "mysql";
 
 // eslint-disable-next-line new-cap
-export const router = express.Router();
+export const router = Router();
 
 router.get("/", (request, response) => {
   const type = request.query.type;
@@ -30,39 +30,9 @@ function expRanking(response: Response): void {
 
   /* eslint-disable indent */
   client.query(
-    "SELECT `name`, `experience`, `xuid` " +
-    "FROM `USER` ORDER BY `experience` DESC",
-    (error, results) => {
-      if (error) {
-        response.status(500).json({
-          error: "Failed to connect to the database.",
-        });
-      } else {
-        let realRank = 0;
-        let rank = 0;
-        let nowExp = 0;
-        const ranking:
-          { ranking: number; name: string; experience: number; }[] = [];
-
-        results.forEach((result:
-          { name: string, experience: number, xuid: number }) => {
-          if (result.xuid === 0) return;
-          realRank++;
-
-          if (result.experience !== nowExp) {
-            rank = realRank;
-            nowExp = result.experience;
-          }
-          ranking.push({
-            ranking: rank,
-            name: result.name,
-            experience: result.experience,
-          });
-        });
-        response.status(200).json(ranking);
-      }
-      client.end();
-    },
+    "SELECT `name`, `experience` AS value, `xuid` " +
+    "FROM `USER` ORDER BY value DESC",
+    (error, results) => resultProcessor(response, error, results),
   );
 }
 
@@ -74,37 +44,44 @@ function moneyRanking(response: Response): void {
 
   /* eslint-disable indent */
   client.query(
-    "SELECT u.xuid, u.name, m.money FROM USER u JOIN MONEY m " +
-    "ON u.xuid = m.xuid ORDER BY m.money DESC",
-    (error, results) => {
-      if (error) {
-        response.status(500).json({
-          error: "Failed to connect to the database.",
-        });
-      } else {
-        let realRank = 0;
-        let rank = 0;
-        let nowMoney = 0;
-        const ranking:
-          { ranking: number; name: string; money: number; }[] = [];
-
-        results.forEach((result:
-          { xuid: number, money: number, name: string }) => {
-          realRank++;
-
-          if (result.money !== nowMoney) {
-            rank = realRank;
-            nowMoney = result.money;
-          }
-          ranking.push({
-            ranking: rank,
-            name: result.name,
-            money: result.money,
-          });
-        });
-        response.status(200).json(ranking);
-      }
-      client.end();
-    },
+    "SELECT u.xuid, u.name, m.money AS value FROM USER u JOIN MONEY m " +
+    "ON u.xuid = m.xuid ORDER BY value DESC",
+    (error, results) => resultProcessor(response, error, results),
   );
+}
+
+/**
+ * @param {Response} response
+ * @param {MysqlError} error
+ * @param {Array} results
+ */
+function resultProcessor(response: Response, error: MysqlError | null,
+  results: Array<{ xuid: number, value: number, name: string }>): void {
+  if (error) {
+    response.status(500).json({
+      error: "Failed to connect to the database.",
+    });
+  } else {
+    let realRank = 0;
+    let rank = 0;
+    let nowValue = 0;
+    const ranking:
+      { ranking: number; name: string; value: number; }[] = [];
+
+    results.forEach((result:
+      { xuid: number, value: number, name: string }) => {
+      realRank++;
+
+      if (result.value !== nowValue) {
+        rank = realRank;
+        nowValue = result.value;
+      }
+      ranking.push({
+        ranking: rank,
+        name: result.name,
+        value: result.value,
+      });
+    });
+    response.status(200).json(ranking);
+  }
 }
