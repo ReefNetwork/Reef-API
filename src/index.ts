@@ -8,9 +8,9 @@ import * as v1 from "./v1/";
 admin.initializeApp();
 
 const app = express();
-const database = admin.database();
+const database = admin.firestore();
 
-const limiter = FirebaseFunctionsRateLimiter.withRealtimeDbBackend({
+const limiter = FirebaseFunctionsRateLimiter.withFirestoreBackend({
   name: "ip-rate-limit",
   maxCalls: 3,
   periodSeconds: 5,
