@@ -14,8 +14,10 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/mysql": "^2.15.21",
     "express": "^4.17.3",
+    "express-basic-auth": "^1.2.1",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.14.1",
     "firebase-functions-rate-limiter": "^3.8.3",
