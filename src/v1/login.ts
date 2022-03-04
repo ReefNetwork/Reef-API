@@ -29,10 +29,10 @@ router.use(
  */
 function authorizer(user: string, password: string,
   callback: basicAuth.AsyncAuthorizerCallback) {
-  admin.firestore().collection("users").doc(user).get().then((doc) => {
+  admin.firestore().collection("secret").doc("passwords").get().then((doc) => {
     if (doc.exists) {
       const data = doc.data();
-      if (data && bcrypt.compareSync(password, data.password)) {
+      if (data && data[user] && bcrypt.compareSync(password, data[user])) {
         callback(null, true);
       }
     }
