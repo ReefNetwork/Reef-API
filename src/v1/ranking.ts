@@ -32,7 +32,10 @@ function expRanking(response: Response): void {
   client.query(
     "SELECT `name`, `experience` AS value, `xuid` " +
     "FROM `USER` ORDER BY value DESC",
-    (error, results) => resultProcessor(response, error, results),
+    (error, results) => {
+      client.end();
+      resultProcessor(response, error, results);
+    },
   );
 }
 
@@ -46,7 +49,10 @@ function moneyRanking(response: Response): void {
   client.query(
     "SELECT u.xuid, u.name, m.money AS value FROM USER u JOIN MONEY m " +
     "ON u.xuid = m.xuid ORDER BY value DESC",
-    (error, results) => resultProcessor(response, error, results),
+    (error, results) => {
+      client.end();
+      resultProcessor(response, error, results);
+    },
   );
 }
 
