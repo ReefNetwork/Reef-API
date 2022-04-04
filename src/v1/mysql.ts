@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import * as mysql from "mysql";
 
 export const database = {
-  CORAL_REEF: "s20_CORAL_REEF",
+  CORAL_REEF: "s2802_CORAL_REEF",
 };
 
 /**
