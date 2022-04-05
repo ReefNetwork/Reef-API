@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import * as cors from "cors";
 import * as express from "express";
 import * as functions from "firebase-functions";
 import {FirebaseFunctionsRateLimiter} from "firebase-functions-rate-limiter";
@@ -16,6 +17,7 @@ const limiter = FirebaseFunctionsRateLimiter.withFirestoreBackend({
   periodSeconds: 5,
 }, database);
 
+app.use(cors({origin: "*.gh-static.ree-jp.net"}));
 app.use("/v1/", v1.router);
 
 const http = functions.region("asia-northeast1").runWith({
