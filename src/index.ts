@@ -17,7 +17,7 @@ const limiter = FirebaseFunctionsRateLimiter.withFirestoreBackend({
   periodSeconds: 5,
 }, database);
 
-app.use(cors({origin: "*.gh-static.ree-jp.net"}));
+app.use(cors({origin: true}));
 app.use("/v1/", v1.router);
 
 const http = functions.region("asia-northeast1").runWith({

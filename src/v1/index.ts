@@ -1,7 +1,6 @@
 import * as express from "express";
 
 import * as ban from "./ban";
-import * as login from "./login";
 import * as xuid from "./xuid";
 import * as ranking from "./ranking";
 
@@ -9,6 +8,5 @@ import * as ranking from "./ranking";
 export const router = express.Router();
 
 router.use("/ban", ban.router);
-router.use("/login", login.router);
 router.use("/xuid", xuid.router);
 router.use("/ranking", ranking.router);

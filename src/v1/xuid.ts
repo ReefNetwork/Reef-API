@@ -6,10 +6,10 @@ export const router = express.Router();
 
 router.get("/", (request, response) => {
   const name = request.query.name;
-  const client = mysql.createConnection(mysql.database.CORAL_REEF);
+  const client = mysql.createConnection(mysql.database.REEF_SERVER);
   /* eslint-disable indent */
   client.query(
-    "SELECT xuid FROM `USER` WHERE `name` = ?",
+    "SELECT xuid FROM `user` WHERE `name` = ?",
     [name],
     (error, results) => {
       if (error) {
