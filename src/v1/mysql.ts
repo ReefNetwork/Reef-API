@@ -2,20 +2,19 @@ import * as functions from "firebase-functions";
 import * as mysql from "mysql";
 
 export const database = {
-  CORAL_REEF: "s2802_CORAL_REEF",
+  CORAL_REEF: "reef_seichi",
   REEF_SERVER: "reef_server",
 };
 
 /**
- * @param {string} database
  * @return {mysql.Connection} connection
  */
-export function createConnection(database: string): mysql.Connection {
+export function createReefSeichiConnection(): mysql.Connection {
   return mysql.createConnection({
-    host: functions.config().mysql.host,
-    user: functions.config().mysql.user,
-    password: functions.config().mysql.pass,
-    database: database,
+    host: functions.config().mysql.reef_seichi.host,
+    user: functions.config().mysql.reef_seichi.user,
+    password: functions.config().mysql.reef_seichi.pass,
+    database: database.CORAL_REEF,
   });
 }
 

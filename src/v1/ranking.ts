@@ -26,7 +26,7 @@ router.get("/", (request, response) => {
  * @param {Response} response
  */
 function expRanking(response: Response): void {
-  const client = mysql.createConnection(mysql.database.CORAL_REEF);
+  const client = mysql.createReefSeichiConnection();
 
   /* eslint-disable indent */
   client.query(
@@ -43,7 +43,7 @@ function expRanking(response: Response): void {
  * @param {Response} response
  */
 function moneyRanking(response: Response): void {
-  const client = mysql.createConnection(mysql.database.CORAL_REEF);
+  const client = mysql.createReefSeichiConnection();
 
   /* eslint-disable indent */
   client.query(
