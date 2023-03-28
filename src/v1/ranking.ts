@@ -7,7 +7,12 @@ export const router = Router();
 
 router.get("/", (request, response) => {
   const type = request.query.type;
+  const before = request.query.before;
+  const after = request.query.after;
   switch (type) {
+    case "dig":
+      digRanking(response, before, after);
+      break;
     case "exp":
       expRanking(response);
       break;
@@ -21,6 +26,60 @@ router.get("/", (request, response) => {
       break;
   }
 });
+
+/**
+ * @param {Response} response
+ * @param {any} before
+ * @param {any} after
+ */
+function digRanking(response: Response, before: any, after: any): void {
+  const client = mysql.createReefSeichiConnection();
+
+  if (before != undefined && after != undefined) {
+    /* eslint-disable indent */
+    client.query(
+      "SELECT USER.name AS name, SUM(SESSION_RECORD.break_count) AS value,\n" +
+      "SESSION_RECORD.xuid\n" +
+      "FROM `SESSION_RECORD`, `USER`\n" +
+      "WHERE join_time >= ? AND quit_time <= ?\n" +
+      "AND USER.xuid = SESSION_RECORD.xuid\n" +
+      "GROUP BY SESSION_RECORD.xuid ORDER BY value DESC",
+      [new Date(Number(before)).toISOString(),
+        new Date(Number(after)).toISOString()],
+      (error, results) => {
+        if (error) {
+          console.log(error.message);
+          response.status(500).json({
+            error: "Failed to connect to the database or invalid query.",
+          });
+        } else {
+          resultProcessor(response, error, results);
+        }
+        client.end();
+      },
+    );
+  } else {
+    /* eslint-disable indent */
+    client.query(
+      "SELECT USER.name AS name, SUM(SESSION_RECORD.break_count) AS value,\n" +
+      "SESSION_RECORD.xuid\n" +
+      "FROM `SESSION_RECORD`, `USER`\n" +
+      "WHERE USER.xuid = SESSION_RECORD.xuid\n" +
+      "GROUP BY SESSION_RECORD.xuid ORDER BY value DESC",
+      (error, results) => {
+        if (error) {
+          console.log(error.message);
+          response.status(500).json({
+            error: "Failed to connect to the database or invalid query.",
+          });
+        } else {
+          resultProcessor(response, error, results);
+        }
+        client.end();
+      },
+    );
+  }
+}
 
 /**
  * @param {Response} response
