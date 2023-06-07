@@ -5,6 +5,8 @@ import {MysqlError} from "mysql";
 // eslint-disable-next-line new-cap
 export const router = Router();
 
+const NOT_SHOW = ["CookPad666", "hera368025", "aikawaosushi", "rotte0315"];
+
 router.get("/", (request, response) => {
   const type = request.query.type;
   const before = request.query.before;
@@ -135,6 +137,8 @@ function resultProcessor(response: Response, error: MysqlError | null,
 
     results.forEach((result:
       { xuid: number, value: number, name: string }) => {
+      if (NOT_SHOW.includes(name)) return;
+
       realRank++;
 
       if (result.value !== nowValue) {
